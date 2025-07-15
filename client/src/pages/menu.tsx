@@ -522,7 +522,12 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Search, SlidersHorizontal, ChevronDown } from "lucide-react";
+import {
+  ArrowLeft,
+  Search,
+  SlidersHorizontal,
+  ChevronDown,
+} from "lucide-react";
 import { useLocation } from "wouter";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -563,24 +568,31 @@ export default function Menu() {
   });
 
   // Create a mapping from category IDs to category labels
-  const categoryIdToLabel = categories.reduce((acc, category) => {
-    acc[category.id] = category.label;
-    return acc;
-  }, {} as Record<string, string>);
+  const categoryIdToLabel = categories.reduce(
+    (acc, category) => {
+      acc[category.id] = category.label;
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
 
   const filteredItems = useMemo(() => {
-    return menuItems.filter(item => {
+    return menuItems.filter((item) => {
       // Convert activeCategory ID to label for comparison
       const activeCategoryLabel = categoryIdToLabel[activeCategory];
-      
-      // If there's a search query, search across all categories
-      const matchesCategory = searchQuery.trim() ? true : item.category === activeCategoryLabel;
 
-      const matchesFilter = filterType === "all" ||
+      // If there's a search query, search across all categories
+      const matchesCategory = searchQuery.trim()
+        ? true
+        : item.category === activeCategoryLabel;
+
+      const matchesFilter =
+        filterType === "all" ||
         (filterType === "veg" && item.isVeg) ||
         (filterType === "non-veg" && !item.isVeg);
 
-      const matchesSearch = searchQuery.trim() === "" ||
+      const matchesSearch =
+        searchQuery.trim() === "" ||
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.description.toLowerCase().includes(searchQuery.toLowerCase());
 
@@ -590,7 +602,7 @@ export default function Menu() {
 
   const cartItemCount = cartItems.length;
 
-  const currentFilter = filterTypes.find(f => f.id === filterType);
+  const currentFilter = filterTypes.find((f) => f.id === filterType);
 
   // Clear search when category changes (if you want this behavior)
   const handleCategoryChange = (categoryId: string) => {
@@ -600,10 +612,15 @@ export default function Menu() {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--elegant-cream)' }}>
+    <div
+      className="min-h-screen"
+      style={{ backgroundColor: "var(--elegant-cream)" }}
+    >
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-white border-b elegant-shadow"
-        style={{ borderColor: 'var(--elegant-light-gray)' }}>
+      <header
+        className="sticky top-0 z-30 bg-white border-b elegant-shadow"
+        style={{ borderColor: "var(--elegant-light-gray)" }}
+      >
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-6">
@@ -612,11 +629,14 @@ export default function Menu() {
                 size="icon"
                 onClick={() => setLocation("/")}
                 className="hover:bg-transparent"
-                style={{ color: 'var(--elegant-gold)' }}
+                style={{ color: "var(--elegant-gold)" }}
               >
                 <ArrowLeft className="h-6 w-6" />
               </Button>
-              <h1 className="font-serif text-3xl md:text-4xl font-bold" style={{ color: 'var(--elegant-gold)' }}>
+              <h1
+                className="font-serif text-3xl md:text-4xl font-bold"
+                style={{ color: "var(--elegant-gold)" }}
+              >
                 Maharaja Feast
               </h1>
             </div>
@@ -635,7 +655,7 @@ export default function Menu() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="bg-white border-2 border-gray-300 focus-visible:ring-2 focus-visible:ring-yellow-400/50 h-14 text-lg font-sans pr-36 pl-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
-                style={{ color: 'var(--elegant-black)' }}
+                style={{ color: "var(--elegant-black)" }}
               />
               <div className="absolute left-5 top-1/2 transform -translate-y-1/2">
                 <Search className="h-5 w-5 text-gray-400" />
@@ -651,17 +671,22 @@ export default function Menu() {
                     setShowFilterDropdown(!showFilterDropdown);
                   }}
                   className="bg-white border-2 border-gray-300 hover:border-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400/50 h-10 px-4 text-sm font-serif font-semibold flex items-center gap-2 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
-                  style={{ color: 'var(--elegant-black)' }}
+                  style={{ color: "var(--elegant-black)" }}
                 >
                   <SlidersHorizontal className="h-4 w-4 text-gray-400" />
                   {currentFilter?.id !== "all" && (
                     <div
                       className="w-2.5 h-2.5 rounded-full border border-white shadow-sm"
-                      style={{ backgroundColor: currentFilter?.id === "veg" ? "#22c55e" : "#ef4444" }}
+                      style={{
+                        backgroundColor:
+                          currentFilter?.id === "veg" ? "#22c55e" : "#ef4444",
+                      }}
                     />
                   )}
                   {currentFilter?.label}
-                  <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${showFilterDropdown ? 'rotate-180' : ''}`} />
+                  <ChevronDown
+                    className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${showFilterDropdown ? "rotate-180" : ""}`}
+                  />
                 </Button>
 
                 {/* Filter Dropdown */}
@@ -682,14 +707,18 @@ export default function Menu() {
                           setFilterType(type.id);
                           setShowFilterDropdown(false);
                         }}
-                        className={`w-full text-left px-4 py-3 hover:bg-gray-50 flex items-center gap-3 font-serif font-semibold transition-all duration-200 ${filterType === type.id ? 'bg-gray-100' : ''
-                          } ${index === 0 ? 'rounded-t-2xl' : ''} ${index === filterTypes.length - 1 ? 'rounded-b-2xl' : ''}`}
-                        style={{ color: 'var(--elegant-black)' }}
+                        className={`w-full text-left px-4 py-3 hover:bg-gray-50 flex items-center gap-3 font-serif font-semibold transition-all duration-200 ${
+                          filterType === type.id ? "bg-gray-100" : ""
+                        } ${index === 0 ? "rounded-t-2xl" : ""} ${index === filterTypes.length - 1 ? "rounded-b-2xl" : ""}`}
+                        style={{ color: "var(--elegant-black)" }}
                       >
                         {type.id !== "all" && (
                           <div
                             className="w-3 h-3 rounded-full border border-white shadow-sm"
-                            style={{ backgroundColor: type.id === "veg" ? "#22c55e" : "#ef4444" }}
+                            style={{
+                              backgroundColor:
+                                type.id === "veg" ? "#22c55e" : "#ef4444",
+                            }}
                           />
                         )}
                         {type.id === "all" && (
@@ -725,11 +754,15 @@ export default function Menu() {
               <Button
                 variant="outline"
                 onClick={() => handleCategoryChange(category.id)}
-                className={`bg-white border-2 font-serif font-bold transition-all duration-300 px-6 py-3 text-black hover:scale-102 whitespace-nowrap ${activeCategory === category.id ? 'shadow-lg scale-105' : ''
-                  }`}
+                className={`bg-white border-2 font-serif font-bold transition-all duration-300 px-6 py-3 text-black hover:scale-102 whitespace-nowrap ${
+                  activeCategory === category.id ? "shadow-lg scale-105" : ""
+                }`}
                 style={{
-                  borderColor: activeCategory === category.id ? 'var(--elegant-gold)' : 'var(--elegant-light-gray)',
-                  backgroundColor: 'white'
+                  borderColor:
+                    activeCategory === category.id
+                      ? "var(--elegant-gold)"
+                      : "var(--elegant-light-gray)",
+                  backgroundColor: "white",
                 }}
               >
                 {category.label}
@@ -743,8 +776,12 @@ export default function Menu() {
       {searchQuery.trim() && (
         <div className="container mx-auto px-4 mb-6">
           <div className="bg-white rounded-2xl p-4 elegant-shadow">
-            <p className="font-serif text-lg" style={{ color: 'var(--elegant-gold)' }}>
-              Search results for "{searchQuery}" ({filteredItems.length} items found)
+            <p
+              className="font-serif text-lg"
+              style={{ color: "var(--elegant-gold)" }}
+            >
+              Search results for "{searchQuery}" ({filteredItems.length} items
+              found)
             </p>
           </div>
         </div>
@@ -756,18 +793,36 @@ export default function Menu() {
           <div className="text-center py-20">
             <div className="relative mx-auto w-16 h-16 mb-8">
               <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-300"></div>
-              <div className="animate-spin rounded-full h-16 w-16 border-4 border-t-transparent absolute top-0 left-0" style={{ borderColor: 'var(--elegant-gold)' }}></div>
+              <div
+                className="animate-spin rounded-full h-16 w-16 border-4 border-t-transparent absolute top-0 left-0"
+                style={{ borderColor: "var(--elegant-gold)" }}
+              ></div>
             </div>
-            <p className="font-sans text-2xl" style={{ color: 'var(--elegant-gray)' }}>Loading royal delicacies...</p>
+            <p
+              className="font-sans text-2xl"
+              style={{ color: "var(--elegant-gray)" }}
+            >
+              Loading royal delicacies...
+            </p>
           </div>
         ) : filteredItems.length === 0 ? (
           <div className="text-center py-20">
             <div className="bg-white rounded-3xl p-12 max-w-md mx-auto elegant-shadow">
-              <p className="font-serif text-2xl mb-4" style={{ color: 'var(--elegant-gold)' }}>
-                {searchQuery.trim() ? 'No dishes found for your search' : 'No Royal Dishes Found'}
+              <p
+                className="font-serif text-2xl mb-4"
+                style={{ color: "var(--elegant-gold)" }}
+              >
+                {searchQuery.trim()
+                  ? "No dishes found for your search"
+                  : "No Royal Dishes Found"}
               </p>
-              <p className="font-sans text-lg" style={{ color: 'var(--elegant-gray)' }}>
-                {searchQuery.trim() ? 'Try searching with different keywords' : 'Try adjusting your search or filters'}
+              <p
+                className="font-sans text-lg"
+                style={{ color: "var(--elegant-gray)" }}
+              >
+                {searchQuery.trim()
+                  ? "Try searching with different keywords"
+                  : "Try adjusting your search or filters"}
               </p>
             </div>
           </div>
@@ -781,12 +836,12 @@ export default function Menu() {
               visible: {
                 opacity: 1,
                 transition: {
-                  staggerChildren: 0.1
-                }
-              }
+                  staggerChildren: 0.1,
+                },
+              },
             }}
             style={{
-              alignItems: 'stretch' // This stretches all cards to equal height
+              alignItems: "stretch", // This stretches all cards to equal height
             }}
           >
             {filteredItems.map((item, index) => (
@@ -794,7 +849,7 @@ export default function Menu() {
                 key={item.id}
                 variants={{
                   hidden: { opacity: 0, y: 30 },
-                  visible: { opacity: 1, y: 0 }
+                  visible: { opacity: 1, y: 0 },
                 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="h-full" // Ensures each grid item takes full height

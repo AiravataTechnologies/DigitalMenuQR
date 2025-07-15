@@ -32,10 +32,64 @@ export default async function handler(req, res) {
     console.log('MongoDB connected successfully');
     
     if (req.method === 'GET') {
-      console.log('Fetching menu items...');
-      const menuItems = await database.collection('menuitems').find({}).toArray();
-      console.log(`Found ${menuItems.length} menu items`);
-      res.status(200).json(menuItems);
+      const { category } = req.query;
+      
+      if (category) {
+        // Get items from specific category collection
+        console.log(`Fetching items for category: ${category}`);
+        
+        // Map category names to collection names
+        const categoryMap = {
+          "Chef Special": "chefspecial",
+          "Starters": "starters",
+          "Soups": "soups", 
+          "Main Course": "maincourse",
+          "Rice & Biryani": "ricebiryani",
+          "Bread": "bread",
+          "Desserts": "desserts",
+          "Drinks": "drinks",
+          "Combos": "combos"
+        };
+        
+        const collectionName = categoryMap[category];
+        if (!collectionName) {
+          res.status(400).json({ error: 'Invalid category' });
+          return;
+        }
+        
+        const items = await database.collection(collectionName).find({}).toArray();
+        console.log(`Found ${items.length} items in ${category} category`);
+        res.status(200).json(items);
+      } else {
+        // Get all menu items from all category collections
+        console.log('Fetching all menu items...');
+        
+        const categories = [
+          "chefspecial",
+          "starters", 
+          "soups",
+          "maincourse",
+          "ricebiryani",
+          "bread",
+          "desserts",
+          "drinks",
+          "combos"
+        ];
+        
+        let allMenuItems = [];
+        
+        for (const categoryCollection of categories) {
+          try {
+            const items = await database.collection(categoryCollection).find({}).toArray();
+            allMenuItems = allMenuItems.concat(items);
+          } catch (error) {
+            console.log(`Collection ${categoryCollection} not found or empty`);
+          }
+        }
+        
+        console.log(`Found ${allMenuItems.length} menu items across all categories`);
+        res.status(200).json(allMenuItems);
+      }
     } else {
       res.status(405).json({ error: 'Method not allowed' });
     }

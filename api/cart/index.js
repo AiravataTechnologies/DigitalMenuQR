@@ -33,7 +33,7 @@ export default async function handler(req, res) {
     
     if (req.method === 'GET') {
       console.log('Fetching cart items...');
-      const cartItems = await database.collection('cartitems').find({}).toArray();
+      const cartItems = await database.collection('cart').find({}).toArray();
       console.log(`Found ${cartItems.length} cart items`);
       res.status(200).json(cartItems);
     } else if (req.method === 'POST') {
@@ -42,11 +42,11 @@ export default async function handler(req, res) {
         createdAt: new Date(),
         updatedAt: new Date()
       };
-      const result = await database.collection('cartitems').insertOne(newCartItem);
-      const insertedItem = await database.collection('cartitems').findOne({ _id: result.insertedId });
+      const result = await database.collection('cart').insertOne(newCartItem);
+      const insertedItem = await database.collection('cart').findOne({ _id: result.insertedId });
       res.status(201).json(insertedItem);
     } else if (req.method === 'DELETE') {
-      await database.collection('cartitems').deleteMany({});
+      await database.collection('cart').deleteMany({});
       res.status(204).send();
     } else {
       res.status(405).json({ error: 'Method not allowed' });
