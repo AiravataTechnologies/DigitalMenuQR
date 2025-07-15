@@ -26,8 +26,9 @@ export class MongoStorage implements IStorage {
   private usersCollection: Collection<User>;
   private restaurantId: ObjectId;
 
-  // Define available categories
+  // Define available categories - these match menu.tsx categories
   private readonly categories = [
+    "Chef Special",
     "Starters",
     "Soups", 
     "Main Course",
@@ -45,6 +46,7 @@ export class MongoStorage implements IStorage {
     
     // Initialize collections for each category with correct collection names
     const categoryCollectionMapping = {
+      "Chef Special": "chefspecial",
       "Starters": "starters",
       "Soups": "soups", 
       "Main Course": "maincourse",
@@ -67,6 +69,26 @@ export class MongoStorage implements IStorage {
 
   async connect() {
     await this.client.connect();
+    await this.ensureCollectionsExist();
+  }
+
+  private async ensureCollectionsExist() {
+    try {
+      // Get list of existing collections
+      const existingCollections = await this.db.listCollections().toArray();
+      const existingNames = existingCollections.map(c => c.name);
+      
+      // Create collections for categories that don't exist
+      for (const [category, collection] of this.categoryCollections) {
+        const collectionName = collection.collectionName;
+        if (!existingNames.includes(collectionName)) {
+          await this.db.createCollection(collectionName);
+          console.log(`Created collection: ${collectionName} for category: ${category}`);
+        }
+      }
+    } catch (error) {
+      console.error("Error ensuring collections exist:", error);
+    }
   }
 
   async getUser(id: string): Promise<User | undefined> {

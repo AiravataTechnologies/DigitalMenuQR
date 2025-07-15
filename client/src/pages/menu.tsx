@@ -562,10 +562,19 @@ export default function Menu() {
     queryKey: ["/api/cart"],
   });
 
+  // Create a mapping from category IDs to category labels
+  const categoryIdToLabel = categories.reduce((acc, category) => {
+    acc[category.id] = category.label;
+    return acc;
+  }, {} as Record<string, string>);
+
   const filteredItems = useMemo(() => {
     return menuItems.filter(item => {
+      // Convert activeCategory ID to label for comparison
+      const activeCategoryLabel = categoryIdToLabel[activeCategory];
+      
       // If there's a search query, search across all categories
-      const matchesCategory = searchQuery.trim() ? true : item.category === activeCategory;
+      const matchesCategory = searchQuery.trim() ? true : item.category === activeCategoryLabel;
 
       const matchesFilter = filterType === "all" ||
         (filterType === "veg" && item.isVeg) ||
@@ -577,7 +586,7 @@ export default function Menu() {
 
       return matchesCategory && matchesFilter && matchesSearch;
     });
-  }, [menuItems, activeCategory, filterType, searchQuery]);
+  }, [menuItems, activeCategory, filterType, searchQuery, categoryIdToLabel]);
 
   const cartItemCount = cartItems.length;
 

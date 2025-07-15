@@ -6,6 +6,33 @@ const connectionString = "mongodb+srv://airavatatechnologiesprojects:9mpIRwBPw8B
 const restaurantId = new ObjectId("6874cff2a880250859286de6");
 
 const menuItems: Omit<MenuItem, '_id'>[] = [
+  // Chef Special
+  {
+    name: "Maharaja's Crown Jewel",
+    description: "Chef's signature dish with finest ingredients and royal presentation",
+    price: 850,
+    category: "Chef Special",
+    isVeg: false,
+    image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+    restaurantId,
+    isAvailable: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: 0
+  },
+  {
+    name: "Royal Emperor's Feast",
+    description: "Exclusive combination of premium delicacies crafted by our master chef",
+    price: 1200,
+    category: "Chef Special",
+    isVeg: true,
+    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+    restaurantId,
+    isAvailable: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    __v: 0
+  },
   // Starters
   {
     name: "Royal Tandoori Platter",
@@ -248,6 +275,7 @@ async function seedDatabase() {
     
     // Define category collection mappings
     const categoryCollections = {
+      "Chef Special": "chefspecial",
       "Starters": "starters",
       "Soups": "soups",
       "Main Course": "maincourse",
