@@ -1,5 +1,5 @@
 import { MongoClient, Db, Collection, ObjectId } from "mongodb";
-import { type User, type InsertUser, type MenuItem, type CartItem, type InsertCartItem } from "@shared/schema";
+import { type User, type InsertUser, type MenuItem, type InsertMenuItem, type CartItem, type InsertCartItem } from "@shared/schema";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -9,6 +9,8 @@ export interface IStorage {
   getMenuItems(): Promise<MenuItem[]>;
   getMenuItemsByCategory(category: string): Promise<MenuItem[]>;
   getMenuItem(id: string): Promise<MenuItem | undefined>;
+  getCategories(): string[];
+  addMenuItem(item: InsertMenuItem): Promise<MenuItem>;
   
   getCartItems(): Promise<CartItem[]>;
   addToCart(item: InsertCartItem): Promise<CartItem>;
@@ -19,15 +21,34 @@ export interface IStorage {
 export class MongoStorage implements IStorage {
   private client: MongoClient;
   private db: Db;
-  private menuItemsCollection: Collection<MenuItem>;
+  private categoryCollections: Map<string, Collection<MenuItem>>;
   private cartItemsCollection: Collection<CartItem>;
   private usersCollection: Collection<User>;
   private restaurantId: ObjectId;
 
+  // Define available categories
+  private readonly categories = [
+    "Starters",
+    "Soups", 
+    "Main Course",
+    "Rice & Biryani",
+    "Bread",
+    "Desserts",
+    "Drinks",
+    "Combos"
+  ];
+
   constructor(connectionString: string) {
     this.client = new MongoClient(connectionString);
     this.db = this.client.db("maharajafeast");
-    this.menuItemsCollection = this.db.collection("menuitems");
+    this.categoryCollections = new Map();
+    
+    // Initialize collections for each category
+    this.categories.forEach(category => {
+      const collectionName = category.toLowerCase().replace(/\s+/g, '').replace('&', '');
+      this.categoryCollections.set(category, this.db.collection(collectionName));
+    });
+    
     this.cartItemsCollection = this.db.collection("cartitems");
     this.usersCollection = this.db.collection("users");
     this.restaurantId = new ObjectId("6874cff2a880250859286de6");
@@ -79,8 +100,15 @@ export class MongoStorage implements IStorage {
 
   async getMenuItems(): Promise<MenuItem[]> {
     try {
-      const menuItems = await this.menuItemsCollection.find({}).toArray();
-      return menuItems;
+      const allMenuItems: MenuItem[] = [];
+      
+      // Get items from all category collections
+      for (const [category, collection] of this.categoryCollections) {
+        const items = await collection.find({}).toArray();
+        allMenuItems.push(...items);
+      }
+      
+      return allMenuItems;
     } catch (error) {
       console.error("Error getting menu items:", error);
       return [];
@@ -89,7 +117,13 @@ export class MongoStorage implements IStorage {
 
   async getMenuItemsByCategory(category: string): Promise<MenuItem[]> {
     try {
-      const menuItems = await this.menuItemsCollection.find({ category }).toArray();
+      const collection = this.categoryCollections.get(category);
+      if (!collection) {
+        console.error(`Category "${category}" not found`);
+        return [];
+      }
+      
+      const menuItems = await collection.find({}).toArray();
       return menuItems;
     } catch (error) {
       console.error("Error getting menu items by category:", error);
@@ -99,11 +133,48 @@ export class MongoStorage implements IStorage {
 
   async getMenuItem(id: string): Promise<MenuItem | undefined> {
     try {
-      const menuItem = await this.menuItemsCollection.findOne({ _id: new ObjectId(id) });
-      return menuItem || undefined;
+      // Search across all category collections
+      for (const [category, collection] of this.categoryCollections) {
+        const menuItem = await collection.findOne({ _id: new ObjectId(id) });
+        if (menuItem) {
+          return menuItem;
+        }
+      }
+      return undefined;
     } catch (error) {
       console.error("Error getting menu item:", error);
       return undefined;
+    }
+  }
+
+  getCategories(): string[] {
+    return [...this.categories];
+  }
+
+  async addMenuItem(item: InsertMenuItem): Promise<MenuItem> {
+    try {
+      const collection = this.categoryCollections.get(item.category);
+      if (!collection) {
+        throw new Error(`Category "${item.category}" not found`);
+      }
+
+      const now = new Date();
+      const menuItem: Omit<MenuItem, '_id'> = {
+        ...item,
+        restaurantId: this.restaurantId,
+        createdAt: now,
+        updatedAt: now,
+        __v: 0
+      };
+
+      const result = await collection.insertOne(menuItem as MenuItem);
+      return {
+        _id: result.insertedId,
+        ...menuItem,
+      } as MenuItem;
+    } catch (error) {
+      console.error("Error adding menu item:", error);
+      throw error;
     }
   }
 
