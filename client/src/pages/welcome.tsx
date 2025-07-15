@@ -75,12 +75,36 @@ export default function Welcome() {
             </motion.p>
           </motion.div>
 
+          {/* View Menu Button - Moved to middle */}
+          <motion.button
+            initial={{ opacity: 0, y: 30, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
+            whileHover={{
+              scale: 1.05,
+              transition: { duration: 0.2 }
+            }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setLocation("/menu")}
+            className="px-12 py-4 rounded-full font-cinzel text-xl font-bold transition-all duration-300 elegant-shadow border-2 mb-12"
+            style={{
+              color: 'var(--elegant-gold)',
+              borderColor: 'var(--elegant-gold)',
+              backgroundColor: 'transparent'
+            }}
+          >
+            <span className="flex items-center">
+              <Utensils className="inline-block mr-3 text-xl" />
+              Explore Our Royal Menu
+            </span>
+          </motion.button>
+
           {/* About Section */}
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="elegant-card rounded-3xl p-10 md:p-16 mb-12 elegant-shadow border-2"
+            transition={{ duration: 0.6, delay: 1.0, ease: "easeOut" }}
+            className="elegant-card rounded-3xl p-10 md:p-16 elegant-shadow border-2"
             style={{ borderColor: 'var(--elegant-gold)' }}
           >
             <motion.h2
@@ -88,7 +112,7 @@ export default function Welcome() {
               style={{ color: 'var(--elegant-gold)' }}
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
+              transition={{ duration: 0.6, delay: 1.1, ease: "easeOut" }}
             >
               Royal Heritage
             </motion.h2>
@@ -97,7 +121,7 @@ export default function Welcome() {
               style={{ color: 'var(--elegant-gray)' }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 0.7 }}
+              transition={{ duration: 0.6, delay: 1.2, ease: "easeOut" }}
             >
               Experience the grandeur of royal dining at Maharaja Feast, where authentic flavors meet
               regal ambiance. Our master chefs craft each dish with centuries-old recipes passed down
@@ -107,9 +131,9 @@ export default function Welcome() {
             {/* Restaurant Details */}
             <motion.div
               className="grid md:grid-cols-3 gap-8"
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.9 }}
+              transition={{ duration: 0.6, delay: 1.3, ease: "easeOut" }}
             >
               <motion.div
                 className="text-center p-6 rounded-2xl border-2"
@@ -149,29 +173,6 @@ export default function Welcome() {
               </motion.div>
             </motion.div>
           </motion.div>
-
-          {/* View Menu Button */}
-          <motion.button
-            initial={{ opacity: 0, y: 50, scale: 0.8 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.8, delay: 1.2 }}
-            whileHover={{
-              scale: 1.05
-            }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setLocation("/menu")}
-            className="px-12 py-4 rounded-full font-cinzel text-xl font-bold transition-all duration-300 elegant-shadow border-2"
-            style={{
-              color: 'var(--elegant-gold)',
-              borderColor: 'var(--elegant-gold)',
-              backgroundColor: 'transparent'
-            }}
-          >
-            <span className="flex items-center">
-              <Utensils className="inline-block mr-3 text-xl" />
-              Explore Our Royal Menu
-            </span>
-          </motion.button>
         </div>
       </div>
     </div>
