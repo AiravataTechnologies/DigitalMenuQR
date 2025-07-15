@@ -245,19 +245,56 @@ async function seedDatabase() {
     console.log("Connected to MongoDB");
     
     const db = client.db("maharajafeast");
-    const collection = db.collection("menuitems");
     
-    // Clear existing data
-    await collection.deleteMany({});
-    console.log("Cleared existing menu items");
+    // Define category collection mappings
+    const categoryCollections = {
+      "Starters": "starters",
+      "Soups": "soups",
+      "Main Course": "maincourse",
+      "Rice & Biryani": "ricebiryani",
+      "Bread": "bread",
+      "Desserts": "desserts",
+      "Drinks": "drinks",
+      "Combos": "combos"
+    };
     
-    // Insert new menu items
-    const result = await collection.insertMany(menuItems);
-    console.log(`Inserted ${result.insertedCount} menu items`);
+    // Clear existing data from all category collections
+    for (const [category, collectionName] of Object.entries(categoryCollections)) {
+      const collection = db.collection(collectionName);
+      await collection.deleteMany({});
+      console.log(`Cleared existing items from ${category} collection`);
+    }
+    
+    // Group menu items by category and insert into respective collections
+    const itemsByCategory: { [key: string]: typeof menuItems } = {};
+    
+    menuItems.forEach(item => {
+      if (!itemsByCategory[item.category]) {
+        itemsByCategory[item.category] = [];
+      }
+      itemsByCategory[item.category].push(item);
+    });
+    
+    // Insert items into category-specific collections
+    for (const [category, items] of Object.entries(itemsByCategory)) {
+      const collectionName = categoryCollections[category as keyof typeof categoryCollections];
+      if (collectionName) {
+        const collection = db.collection(collectionName);
+        const result = await collection.insertMany(items);
+        console.log(`Inserted ${result.insertedCount} items into ${category} collection`);
+      }
+    }
     
     // Verify insertion
-    const count = await collection.countDocuments();
-    console.log(`Total menu items in database: ${count}`);
+    let totalCount = 0;
+    for (const [category, collectionName] of Object.entries(categoryCollections)) {
+      const collection = db.collection(collectionName);
+      const count = await collection.countDocuments();
+      console.log(`${category}: ${count} items`);
+      totalCount += count;
+    }
+    
+    console.log(`Total menu items across all categories: ${totalCount}`);
     
   } catch (error) {
     console.error("Error seeding database:", error);
