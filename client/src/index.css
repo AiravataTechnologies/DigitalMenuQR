@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@400;600;700;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(60, 4.8%, 95.9%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(60, 4.8%, 95.9%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+  
+  /* Elegant Gold, White, Black theme colors */
+  --elegant-black: hsl(0, 0%, 8%);
+  --elegant-dark-gray: hsl(0, 0%, 15%);
+  --elegant-gold: hsl(43, 100%, 50%);
+  --elegant-gold-light: hsl(43, 100%, 60%);
+  --elegant-gold-dark: hsl(43, 100%, 35%);
+  --elegant-white: hsl(0, 0%, 98%);
+  --elegant-cream: hsl(45, 20%, 95%);
+  --elegant-gray: hsl(0, 0%, 50%);
+  --elegant-light-gray: hsl(0, 0%, 85%);
+  --elegant-emerald: hsl(142, 76%, 36%);
+  --elegant-red: hsl(0, 74%, 42%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .font-playfair {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .font-cinzel {
+    font-family: 'Cinzel Decorative', serif;
+  }
+
+  .font-cormorant {
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .elegant-gradient {
+    background: linear-gradient(135deg, var(--elegant-black) 0%, var(--elegant-dark-gray) 100%);
+  }
+
+  .elegant-gold-gradient {
+    background: linear-gradient(135deg, var(--elegant-gold) 0%, var(--elegant-gold-light) 100%);
+  }
+
+  .elegant-card {
+    background: var(--elegant-white);
+    border: 2px solid var(--elegant-light-gray);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .elegant-card-dark {
+    background: var(--elegant-dark-gray);
+    border: 2px solid var(--elegant-gold);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .dish-card {
+    transition: all 0.3s ease;
+    background: var(--elegant-white);
+    border: 1px solid var(--elegant-light-gray);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .dish-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border-color: var(--elegant-gold);
+  }
+
+  .floating-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--elegant-gold);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float 6s ease-in-out infinite;
+    opacity: 0.7;
+  }
+
+  @keyframes float {
+    0%, 100% { 
+      transform: translateY(0px); 
+      opacity: 0.7;
+    }
+    50% { 
+      transform: translateY(-20px); 
+      opacity: 1;
+    }
+  }
+
+  .elegant-shadow {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .elegant-shadow-hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .elegant-gradient {
+    background: linear-gradient(135deg, var(--elegant-cream) 0%, var(--elegant-light-cream) 100%);
+  }
+
+  .elegant-gold-gradient {
+    background: linear-gradient(135deg, var(--elegant-gold) 0%, var(--elegant-light-gold) 100%);
+  }
+
+  .elegant-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--elegant-light-gray);
+  }
+
+  .dish-card {
+    background: white;
+    border: 1px solid var(--elegant-light-gray);
+  }
+
+  .dish-card:hover {
+    border-color: var(--elegant-gold);
+  }
+}
