@@ -43,9 +43,20 @@ export class MongoStorage implements IStorage {
     this.db = this.client.db("maharajafeast");
     this.categoryCollections = new Map();
     
-    // Initialize collections for each category
+    // Initialize collections for each category with correct collection names
+    const categoryCollectionMapping = {
+      "Starters": "starters",
+      "Soups": "soups", 
+      "Main Course": "maincourse",
+      "Rice & Biryani": "ricebiryani",
+      "Bread": "bread",
+      "Desserts": "desserts",
+      "Drinks": "drinks",
+      "Combos": "combos"
+    };
+    
     this.categories.forEach(category => {
-      const collectionName = category.toLowerCase().replace(/\s+/g, '').replace('&', '');
+      const collectionName = categoryCollectionMapping[category as keyof typeof categoryCollectionMapping];
       this.categoryCollections.set(category, this.db.collection(collectionName));
     });
     
