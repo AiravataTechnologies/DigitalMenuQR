@@ -2,14 +2,14 @@ import { motion } from "framer-motion";
 import { Crown, Clock, MapPin, Phone, Utensils, Star, Sparkles } from "lucide-react";
 import { useLocation } from "wouter";
 import FloatingParticles from "@/components/floating-particles";
-import WelcomeSound from "@/components/welcome-sound";
+import AutoWelcomeSound from "@/components/auto-welcome-sound";
 
 export default function Welcome() {
   const [, setLocation] = useLocation();
 
   return (
     <div className="min-h-screen elegant-gradient relative overflow-hidden">
-      <WelcomeSound />
+      <AutoWelcomeSound />
       <FloatingParticles />
 
       {/* Background Image */}
