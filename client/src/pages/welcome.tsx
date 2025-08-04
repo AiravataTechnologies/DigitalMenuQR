@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Crown, Clock, MapPin, Phone, Utensils, Star, Sparkles } from "lucide-react";
 import { useLocation } from "wouter";
 import FloatingParticles from "@/components/floating-particles";
+import GoogleReview from "@/components/google-review";
 
 export default function Welcome() {
   const [, setLocation] = useLocation();
@@ -173,6 +174,9 @@ export default function Welcome() {
               </motion.div>
             </motion.div>
           </motion.div>
+
+          {/* Google Review Section */}
+          <GoogleReview className="mt-12" />
         </div>
       </div>
     </div>

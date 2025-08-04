@@ -532,6 +532,7 @@ import { useLocation } from "wouter";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import DishCard from "@/components/dish-card";
+import CompactGoogleReview from "@/components/compact-google-review";
 import type { MenuItem } from "@shared/schema";
 
 const categories = [
@@ -600,7 +601,7 @@ export default function Menu() {
     });
   }, [menuItems, activeCategory, filterType, searchQuery, categoryIdToLabel]);
 
-  const cartItemCount = cartItems.length;
+  const cartItemCount = Array.isArray(cartItems) ? cartItems.length : 0;
 
   const currentFilter = filterTypes.find((f) => f.id === filterType);
 
@@ -640,6 +641,9 @@ export default function Menu() {
                 Maharaja Feast
               </h1>
             </div>
+            
+            {/* Compact Google Review */}
+            <CompactGoogleReview />
           </div>
         </div>
       </header>
@@ -846,7 +850,7 @@ export default function Menu() {
           >
             {filteredItems.map((item, index) => (
               <motion.div
-                key={item.id}
+                key={item._id.toString()}
                 variants={{
                   hidden: { opacity: 0, y: 30 },
                   visible: { opacity: 1, y: 0 },
